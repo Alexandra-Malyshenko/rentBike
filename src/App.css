@@ -2,37 +2,102 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  min-height: 10vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: left;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: black;
 }
 
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.container {
+  min-height: 10vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: left;
+  font-size: 15px;
+  color: black;
+  padding: 10px;
+}
+h4 {
+  padding-bottom: 10px;
+}
+
+.head {
+  padding-top: 40px;
+}
+
+.container-inner {
+  background-color: #E9EAEE	;
+  position: relative;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.container-rental, .container-rent-avail {
+  background-color: white;
+  margin-bottom: 15px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+.container-rental label, .container-rent-avail label{
+  padding-top: 5px;
+  /*padding-bottom: 5px;*/
+  padding-right: 15px;
+  font-size: 18px;
+}
+
+.button-submit {
+  background-color: #20B2AA;
+  margin-top: 30px;
+  float: right;
+  /*padding: 25px 35px;*/
+  width: 150px;
+  height: 40px;
+}
+.btn-success {
+  background-color: #23BA99!important;
+  border: #23BA99!important;
+}
+
+.btn-danger {
+  background-color: #F2323F!important;
+  border: #F2323F!important;
+}
+.button-cancel-rent {
+  float: right;
+  /*padding: 25px 35px;*/
+  width: 150px;
+  height: 40px;
+}
+
+.button-cancel {
+  justify-content: end;
+  /*padding: 25px 35px;*/
+  width: 150px;
+  height: 40px;
+}
+.button-rent {
+  margin-right: 20px;
+  /*padding: 25px 35px;*/
+  width: 150px;
+  height: 40px;
+}
+.btn-info {
+  background-color: #3750C7!important;
+  border: #3750C7!important;
+}
+
+.button-mix {
+  display: flex;
+  justify-content: flex-end;
+  float: right;
 }
