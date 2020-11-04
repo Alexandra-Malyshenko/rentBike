@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import 'react-dropdown/style.css';
+import React, {Component} from 'react';
+import axios from 'axios';
 
 export default class CreateBike extends Component {
 
@@ -16,12 +16,12 @@ export default class CreateBike extends Component {
             price: 0,
         }
 
-        this.state.bikes = ['city', 'city-women', 'kids', 'mountain']
+        this.state.bikes = ['city' ,'road', 'mountain', 'electric', 'city-women', 'kids', 'cyclocross']
     }
 
     componentDidMount() {
         this.setState({
-            bikes: ['city', 'city-women', 'kids', 'mountain'],
+            bikes: ['city' ,'road', 'mountain', 'electric', 'city-women', 'kids', 'cyclocross'],
         })
     }
 
@@ -43,7 +43,7 @@ export default class CreateBike extends Component {
         })
     }
 
-    onSubmit = (e) => {
+    onSubmit = async (e) => {
         e.preventDefault();
         const bike = {
             name: this.state.name,
@@ -52,6 +52,10 @@ export default class CreateBike extends Component {
         }
 
         console.log(bike);
+        const result = await axios.post('/rentBike/add', bike);
+        console.log(result.data);
+        // axios.post('/rentBike/add', bike)
+        //     .then(res => console.log(res.data));
 
         this.setState({
             name: '',

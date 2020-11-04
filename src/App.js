@@ -27,8 +27,6 @@ class App extends Component {
                 <RentalBike></RentalBike>
                 <h4 className="head">🚲 Available Rent Bike</h4>
                 <AvailRentalBike></AvailRentalBike>
-                <AvailRentalBike></AvailRentalBike>
-                <AvailRentalBike></AvailRentalBike>
 
             </div>
         );

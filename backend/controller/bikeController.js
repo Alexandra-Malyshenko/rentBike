@@ -35,7 +35,7 @@ exports.createBike = async (req, res) => {
         await res.status(201).json({
             status: "success",
             data: {
-                tour: new_bike,
+                bike: new_bike,
             }
         });
     } catch (err) {

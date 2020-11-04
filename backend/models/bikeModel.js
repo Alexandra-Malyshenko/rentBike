@@ -10,8 +10,6 @@ const bikeSchema = new Schema({
     },
     bikeType: {
         type: String,
-        default: 'city',
-        enum: ['city' ,'road', 'mountain', 'electric', 'city-women', 'kids', 'cyclocross'],
     },
     price: {
         type: Number,
