@@ -20,6 +20,20 @@ const bikeSchema = new Schema({
     rent: {
         type: Boolean,
         default: false
+    },
+    rentedAt: Date,
+    rentedTime: {
+        type: Number,
+        default: 1
+    }
+});
+
+bikeSchema.pre('save', function (next) {
+    if (this.isModified('rent')) {
+        this.rentedAt = Date.now() - 1000;
+        next();
+    } else {
+        return next();
     }
 });
 

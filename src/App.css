@@ -3,6 +3,7 @@
 }
 
 .App-header {
+  margin-top: 20px;
   min-height: 10vh;
   display: flex;
   flex-direction: column;

@@ -83,7 +83,10 @@ exports.deleteBike = async (req, res) => {
 
 exports.updateRentBike = async (req, res) => {
     try {
-        const bike = await Bike.findByIdAndUpdate(req.params.id, req.body, {
+        const rent = req.body.rent;
+        const rentedAt = rent ? Date.now(): undefined;
+        const rentedTime = rent ? req.body.rentedTime: 1;
+        const bike = await Bike.findByIdAndUpdate(req.params.id, {rent, rentedAt, rentedTime}, {
             new: true,
             runValidators: true
         });
