@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  padding: 50px;
 }
 
 .App-header {
@@ -17,7 +18,7 @@
   color: #61dafb;
 }
 
-.container {
+.container{
   min-height: 10vh;
   display: flex;
   flex-direction: column;
@@ -26,6 +27,10 @@
   font-size: 15px;
   color: black;
   padding: 10px;
+}
+
+.wrapper {
+  padding: 100px;
 }
 
 h4 {
@@ -103,3 +108,4 @@ h4 {
   justify-content: flex-end;
   float: right;
 }
+
