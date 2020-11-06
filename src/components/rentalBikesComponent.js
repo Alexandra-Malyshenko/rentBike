@@ -34,7 +34,6 @@ export default class RentalBike extends Component {
 
     componentDidMount = async () => {
         try {
-
             const res = await axios.get('/rentBike/');
             this.setState({
                 bikes: res.data.data.bikes.filter(el => el.rent === true)
@@ -44,7 +43,6 @@ export default class RentalBike extends Component {
         } catch (err) {
             console.log(`Error: ${err}`);
         }
-
     }
 
     totalPrice = () => {

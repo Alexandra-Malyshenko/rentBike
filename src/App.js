@@ -13,6 +13,8 @@ class App extends Component {
         this.state = {bikes: []};
 
         this.addBike = this.addBike.bind(this);
+        this.deleteBike = this.deleteBike.bind(this);
+        this.rentBike = this.rentBike.bind(this);
 
     }
 
@@ -22,8 +24,8 @@ class App extends Component {
         const result = await axios.post('/rentBike/add', bike);
         console.log(result.data.data.bike);
 
-        this.setState((prevState, props) => {
-            return { bikes: [...prevState.bikes ,result.data.data.bike] }
+        this.setState({
+            bikes: this.state.bikes.concat([result.data.data.bike])
         });
 
         console.log(this.state.bikes);
@@ -32,6 +34,7 @@ class App extends Component {
     deleteBike = async (id) => {
         const res = await axios.delete('/rentBike/'+ id);
         console.log(res.data);
+
         this.setState({
             bikes: this.state.bikes.filter(el => el._id !== id)
         });
@@ -41,10 +44,6 @@ class App extends Component {
     rentBike = async (id, bike) => {
         const result = await axios.patch('/rentBike/' +id , bike);
         console.log(result.data);
-
-        // this.setState({
-        //     bikes: this.state.bikes.filter(el => el._id !== id)
-        // });
     }
 
 
@@ -59,10 +58,6 @@ class App extends Component {
         })
         console.log(this.state.bikes);
     }
-
-    // availableBikes() {
-    //     this.state.bikes.filter(el => el.rent === false);
-    // }
 
     render() {
         return (

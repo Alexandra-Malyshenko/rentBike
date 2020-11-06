@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import CreateBike from "./createBikeComponent";
 import PropTypes from 'prop-types';
 import axios from "axios";
 
@@ -38,25 +37,17 @@ export default class AvailRentalBike extends Component {
 
         this.state = {totalPrice: 0};
         this.state = {bikes: []};
-
     }
 
 
-    componentDidMount = async () => {
-        try {
-            setTimeout(()=>{
-                console.log(this.props.bikes);
-                this.setState({
-                    bikes: this.props.bikes.filter(el => el.rent === false)
-                })
-                }, 500);
-
-            console.log(this.state.bikes);
-
-
-        } catch (err) {
-            console.log(`Error: ${err}`);
-        }
+    componentDidMount() {
+        setTimeout(()=>{
+            console.log(this.props.bikes);
+            this.setState({
+                bikes: this.props.bikes.filter(el => el.rent === false)
+            })
+        }, 500);
+        console.log(this.state.bikes);
 
     }
 
@@ -79,7 +70,6 @@ export default class AvailRentalBike extends Component {
     rentBike = async (id, e) => {
         e.preventDefault();
         let time = this.state.id === id ? this.state.time : 1;
-        // let rent = true;
         let newBikePrice = 0;
 
         const res = await axios.get('/rentBike/' +id);
@@ -96,6 +86,7 @@ export default class AvailRentalBike extends Component {
         }
 
         this.props.rentBike(id, bike);
+
         this.setState({
             bikes: this.state.bikes.filter(el => el._id !== id),
             rentedTime: 1
@@ -127,7 +118,7 @@ export default class AvailRentalBike extends Component {
 
 }
 
-CreateBike.propTypes = {
+AvailRentalBike.propTypes = {
     deleteBike: PropTypes.func.isRequired,
     rentBike: PropTypes.func.isRequired,
     bikes: PropTypes.arrayOf(PropTypes.object).isRequired

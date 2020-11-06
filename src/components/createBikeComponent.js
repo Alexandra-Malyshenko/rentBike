@@ -56,57 +56,49 @@ export default class CreateBike extends Component {
 
     render() {
         return(
-
-                        <form onSubmit={this.onSubmit}>
-                            <div className="row">
-                                <div className="form-group col-md-3">
-                                    <label>Bike Name</label>
-                                    <input type="text" name="name" id="name" aria-describedby="emailHelp" placeholder="Bike name"
-                                           required
-                                           className="form-control"
-                                           value={this.state.name}
-                                           onChange={this.onChangeName} />
-                                </div>
-                                <div className="form-group col-md-3">
-                                    <label>Bike Type</label>
-                                    <select
-                                            required
-                                            className="form-control"
-                                            value={this.state.bikeType}
-                                            onChange={this.onChangeBikeType}>
-                                        {
-                                            this.state.bikesType.map(function(bike) {
-                                                return <option
-                                                    key={bike}
-                                                    value={bike}>{bike}
-                                                </option>;
-                                            })
-                                        }
-                                    </select>
-                                </div>
-                                <div className="form-group col-md-3">
-                                    <label>Rent Price (per 1 hour)</label>
-                                    <input type="text" name="price" id="price" placeholder="Rent Price"
-                                           required
-                                           className="form-control"
-                                           value={this.state.price}
-                                           onChange={this.onChangePrice}  />
-                                </div>
-                                <div className="form-group col-md-3">
-                                    <button type="submit"  className="btn btn-success button-submit"
-                                            // onClick={ () => { this.props.addBike(
-                                            //     {   name: this.state.name,
-                                            //         bikeType: this.state.bikeType,
-                                            //         price: this.state.price}
-                                            //         ) } }
-                                    >Submit rent</button>
-                                </div>
-                            </div>
-                        </form>
+            <form onSubmit={this.onSubmit}>
+                <div className="row">
+                    <div className="form-group col-md-3">
+                        <label>Bike Name</label>
+                        <input type="text" name="name" id="name" aria-describedby="emailHelp" placeholder="Bike name"
+                               required
+                               className="form-control"
+                               value={this.state.name}
+                               onChange={this.onChangeName} />
+                    </div>
+                    <div className="form-group col-md-3">
+                        <label>Bike Type</label>
+                        <select
+                            required
+                            className="form-control"
+                            value={this.state.bikeType}
+                            onChange={this.onChangeBikeType}>
+                            {
+                                this.state.bikesType.map(function(bike) {
+                                    return <option
+                                        key={bike}
+                                        value={bike}>{bike}
+                                    </option>;
+                                })
+                            }
+                        </select>
+                    </div>
+                    <div className="form-group col-md-3">
+                        <label>Rent Price (per 1 hour)</label>
+                        <input type="text" name="price" id="price" placeholder="Rent Price"
+                               required
+                               className="form-control"
+                               value={this.state.price}
+                               onChange={this.onChangePrice}  />
+                    </div>
+                    <div className="form-group col-md-3">
+                        <button type="submit"  className="btn btn-success button-submit">Submit rent</button>
+                    </div>
+                </div>
+            </form>
 
         )
     }
-
 
 }
 
