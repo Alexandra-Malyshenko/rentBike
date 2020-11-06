@@ -28,20 +28,11 @@ export default class RentalBike extends Component {
 
         this.cancelRentBike = this.cancelRentBike.bind(this);
         this.state = {totalPrice: 0};
-        this.state = {bikes: []};
-    }
-
-    componentDidMount = async () => {
-        setTimeout(()=>{
-            this.setState({
-                bikes: this.props.bikes.filter(el => el.rent === true)
-            });
-        }, 500);
 
     }
 
     totalPrice() {
-        const arr = this.props.bikes.filter(el => el.rent === true);
+        const arr = this.props.rentalBikes;
         if (arr.length > 0) {
             const arrPrice = arr.map(el=> el.price * el.rentedTime );
 
@@ -57,34 +48,20 @@ export default class RentalBike extends Component {
     cancelRentBike = async (id, e) => {
         e.preventDefault();
         this.props.cancelRent(id);
-        let update = true;
-        let bikes = await this.props.cancelRent(id, update);
-        console.log(bikes);
-        this.getBikes(bikes);
-
-    }
-
-    getBikes(bikes) {
-        if (bikes) {
-            return bikes.filter(el => el.rent === true);
-        } else {
-            return this.props.bikes.filter(el => el.rent === true);
-        }
     }
 
 
     bikesList = () => {
-        return this.getBikes().map(currentbike => {
+        return this.props.rentalBikes.map(currentbike => {
             return <Bikes bike={currentbike} cancelRentBike={this.cancelRentBike} key={currentbike._id}/>
         })
     }
-
 
     render () {
         return(
             <div className="container">
                 <h4 className="head">🤩  Your rent (Total: ${this.totalPrice()})</h4>
-                <h6 className="head"> All rented bikes are: {this.getBikes().length}</h6>
+                <h6 className="head"> All rented bikes are: {this.props.rentalBikes.length}</h6>
                 {this.bikesList()}
             </div>
 

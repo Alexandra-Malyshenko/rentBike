@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import axios from "axios";
 
 const Bikes = props => (
     <div className="container container-rent-avail">
@@ -37,24 +35,11 @@ export default class AvailRentalBike extends Component {
 
         this.state = {  totalPrice: 0,
                         id: 0,
-                        time: 0,
-                        bikes: [] };
-    }
-
-
-    componentDidMount() {
-        setTimeout(()=>{
-            // console.log(this.props.bikes);
-            this.setState({
-                bikes: this.props.bikes.filter(el => el.rent === false)
-            })
-        }, 500);
-
+                        time: 0 };
     }
 
     onChangeTime = (id, e) => {
         if (e.target.name === id) {
-
             this.setState({
                 time: e.target.value || 1,
                 id: id
@@ -64,49 +49,16 @@ export default class AvailRentalBike extends Component {
 
     deleteBike = async (id) => {
         this.props.deleteBike(id);
-        this.setState({
-            bikes: this.state.bikes.filter(el => el._id !== id)
-        });
     }
 
     rentBike = async (id, e) => {
         e.preventDefault();
         let time = this.state.id === id ? this.state.time : 1;
-        let newBikePrice = 0;
-
-        const res = await axios.get('/rentBike/' +id);
-
-        if (time >= 24) {
-            newBikePrice = ((res.data.bike.price * time) / 2).toFixed(2);
-        } else {
-            newBikePrice = (res.data.bike.price * time).toFixed(2);
-        }
-        const bike = {
-            rent: true,
-            price: newBikePrice,
-            rentedTime: time,
-        }
-        let update = true;
-
-        let bikes = await this.props.rentBike(id, bike, update);
-        console.log(bikes);
-        this.getBikes(bikes);
-
+        this.props.rentBike(id, time);
     }
-
-    getBikes(bikes) {
-        // console.log(this.props.updateData(true));
-        if (bikes) {
-            return bikes.filter(el => el.rent === false);
-        } else {
-            return this.props.bikes.filter(el => el.rent === false);
-        }
-
-    }
-
 
     bikesList = () => {
-        return this.getBikes().map(currentbike => {
+        return this.props.availableRentBikes.map(currentbike => {
             return <Bikes bike={currentbike}
                           rentBike={this.rentBike}
                           deleteBike={this.deleteBike}
@@ -116,21 +68,14 @@ export default class AvailRentalBike extends Component {
             });
     }
 
-
     render () {
         return(
             <div className="container">
                 <h4 className="head">🚲 Available Rent Bike</h4>
-                <h6 className="head"> All available bikes are: {this.getBikes().length}</h6>
+                <h6 className="head"> All available bikes are: {this.props.availableRentBikes.length}</h6>
                 {this.bikesList()}
             </div>
         )
     }
 
-}
-
-AvailRentalBike.propTypes = {
-    deleteBike: PropTypes.func.isRequired,
-    rentBike: PropTypes.func.isRequired,
-    bikes: PropTypes.arrayOf(PropTypes.object).isRequired
 }

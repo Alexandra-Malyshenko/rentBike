@@ -10,7 +10,9 @@ import axios from "axios";
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {bikes: []};
+        this.state = {bikes: [],
+            rentalBikes: [],
+            availableRentBikes: []};
 
         this.addBike = this.addBike.bind(this);
         this.deleteBike = this.deleteBike.bind(this);
@@ -18,16 +20,22 @@ class App extends Component {
 
     }
 
+    componentDidMount = async () => {
+        const res = await axios.get('/rentBike/');
+        this.setState({
+            bikes: res.data.data.bikes,
+            availableRentBikes: res.data.data.bikes.filter(el => el.rent === false),
+            rentalBikes: res.data.data.bikes.filter(el => el.rent === true),
+        })
+    }
+
+
     addBike = async (bike) => {
-        console.log(bike);
 
         const result = await axios.post('/rentBike/add', bike);
-        console.log(result.data.data.bike);
-
         this.setState({
-            bikes: this.state.bikes.concat([result.data.data.bike])
+            availableRentBikes: this.state.availableRentBikes.concat([result.data.data.bike]),
         });
-
         console.log(this.state.bikes);
     }
 
@@ -36,47 +44,42 @@ class App extends Component {
         console.log(res.data);
 
         this.setState({
-            bikes: this.state.bikes.filter(el => el._id !== id)
+            availableRentBikes: this.state.availableRentBikes.filter(el => el._id !== id),
         });
-        console.log(this.state.bikes);
     }
 
-    rentBike = async (id, bike, update) => {
-        const result = await axios.patch('/rentBike/' +id , bike);
+    rentBike = async (id, time) => {
+        let newBikePrice = 0;
+        const res = await axios.get('/rentBike/'+ id);
+        if (time >= 20) {
+            newBikePrice = ((res.data.bike.price * time) / 2).toFixed(2);
+        } else {
+            newBikePrice = (res.data.bike.price * time).toFixed(2);
+        }
+        const bike = {
+            rent: true,
+            price: newBikePrice,
+            rentedTime: time
+        }
+        const result = await axios.patch('/rentBike/'+id , bike);
         console.log(result.data);
 
         this.setState({
-            bikes: this.state.bikes.filter(el => el._id !== id)
+            availableRentBikes: this.state.availableRentBikes.filter(el => el._id !== id),
+            rentalBikes: this.state.rentalBikes.concat([result.data.bike]),
         });
-
-        this.updateData(update);
     }
 
-    cancelRent = async (id, update) => {
+    cancelRent = async (id) => {
         const result = await axios.patch('/rentBike/'+ id, {rent: false});
         console.log(result.data);
 
         this.setState({
-            bikes: this.state.bikes.filter(el => el._id !== id)
+            availableRentBikes: this.state.availableRentBikes.concat([result.data.bike]),
+            rentalBikes: this.state.rentalBikes.filter(el => el._id !== id)
         });
-        this.updateData(update);
     }
 
-    updateData(update) {
-        if (update) return this.state.bikes
-    }
-
-    componentDidMount() {
-        this.getBikes();
-    }
-
-    getBikes = async() => {
-        const res = await axios.get('/rentBike/');
-        this.setState({
-            bikes: res.data.data.bikes
-        })
-        console.log(this.state.bikes);
-    }
 
     render() {
         return (
@@ -93,8 +96,8 @@ class App extends Component {
                         </div>
                     </div>
                 </div>
-                <RentalBike bikes={this.state.bikes} cancelRent={this.cancelRent}></RentalBike>
-                <AvailRentalBike bikes={this.state.bikes} rentBike={this.rentBike} deleteBike={this.deleteBike}></AvailRentalBike>
+                <RentalBike rentalBikes={this.state.rentalBikes} cancelRent={this.cancelRent}></RentalBike>
+                <AvailRentalBike availableRentBikes={this.state.availableRentBikes} rentBike={this.rentBike} deleteBike={this.deleteBike}></AvailRentalBike>
             </div>
         );
     }
