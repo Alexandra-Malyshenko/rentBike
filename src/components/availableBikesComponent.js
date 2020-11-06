@@ -59,7 +59,6 @@ export default class AvailRentalBike extends Component {
                 time: e.target.value || 1,
                 id: id
             });
-            console.log(this.state.time);
         }
     }
 
@@ -73,7 +72,6 @@ export default class AvailRentalBike extends Component {
     rentBike = async (id, e) => {
         e.preventDefault();
         let time = this.state.id === id ? this.state.time : 1;
-        console.log(time);
         let newBikePrice = 0;
 
         const res = await axios.get('/rentBike/' +id);
@@ -88,13 +86,22 @@ export default class AvailRentalBike extends Component {
             price: newBikePrice,
             rentedTime: time,
         }
+        let update = true;
 
-        this.props.rentBike(id, bike);
+        let bikes = await this.props.rentBike(id, bike, update);
+        console.log(bikes);
+        this.getBikes(bikes);
 
     }
 
-    getBikes() {
-        return this.props.bikes.filter(el => el.rent === false);
+    getBikes(bikes) {
+        // console.log(this.props.updateData(true));
+        if (bikes) {
+            return bikes.filter(el => el.rent === false);
+        } else {
+            return this.props.bikes.filter(el => el.rent === false);
+        }
+
     }
 
 

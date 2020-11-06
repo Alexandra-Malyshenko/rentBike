@@ -41,24 +41,30 @@ class App extends Component {
         console.log(this.state.bikes);
     }
 
-    rentBike = async (id, bike) => {
+    rentBike = async (id, bike, update) => {
         const result = await axios.patch('/rentBike/' +id , bike);
         console.log(result.data);
 
         this.setState({
             bikes: this.state.bikes.filter(el => el._id !== id)
         });
+
+        this.updateData(update);
     }
 
-    cancelRent = async (id) => {
+    cancelRent = async (id, update) => {
         const result = await axios.patch('/rentBike/'+ id, {rent: false});
         console.log(result.data);
 
         this.setState({
             bikes: this.state.bikes.filter(el => el._id !== id)
         });
+        this.updateData(update);
     }
 
+    updateData(update) {
+        if (update) return this.state.bikes
+    }
 
     componentDidMount() {
         this.getBikes();

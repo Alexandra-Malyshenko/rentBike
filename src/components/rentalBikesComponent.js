@@ -42,7 +42,6 @@ export default class RentalBike extends Component {
 
     totalPrice() {
         const arr = this.props.bikes.filter(el => el.rent === true);
-        console.log(arr);
         if (arr.length > 0) {
             const arrPrice = arr.map(el=> el.price * el.rentedTime );
 
@@ -58,11 +57,19 @@ export default class RentalBike extends Component {
     cancelRentBike = async (id, e) => {
         e.preventDefault();
         this.props.cancelRent(id);
+        let update = true;
+        let bikes = await this.props.cancelRent(id, update);
+        console.log(bikes);
+        this.getBikes(bikes);
 
     }
 
-    getBikes() {
-        return this.props.bikes.filter(el => el.rent === true);
+    getBikes(bikes) {
+        if (bikes) {
+            return bikes.filter(el => el.rent === true);
+        } else {
+            return this.props.bikes.filter(el => el.rent === true);
+        }
     }
 
 
