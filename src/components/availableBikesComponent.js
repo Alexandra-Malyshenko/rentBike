@@ -35,28 +35,31 @@ export default class AvailRentalBike extends Component {
         this.deleteBike = this.deleteBike.bind(this);
         this.rentBike = this.rentBike.bind(this);
 
-        this.state = {totalPrice: 0};
-        this.state = {bikes: []};
+        this.state = {  totalPrice: 0,
+                        id: 0,
+                        time: 0,
+                        bikes: [] };
     }
 
 
     componentDidMount() {
         setTimeout(()=>{
-            console.log(this.props.bikes);
+            // console.log(this.props.bikes);
             this.setState({
                 bikes: this.props.bikes.filter(el => el.rent === false)
             })
         }, 500);
-        console.log(this.state.bikes);
 
     }
 
     onChangeTime = (id, e) => {
         if (e.target.name === id) {
+
             this.setState({
                 time: e.target.value || 1,
                 id: id
             });
+            console.log(this.state.time);
         }
     }
 
@@ -70,6 +73,7 @@ export default class AvailRentalBike extends Component {
     rentBike = async (id, e) => {
         e.preventDefault();
         let time = this.state.id === id ? this.state.time : 1;
+        console.log(time);
         let newBikePrice = 0;
 
         const res = await axios.get('/rentBike/' +id);
@@ -87,15 +91,15 @@ export default class AvailRentalBike extends Component {
 
         this.props.rentBike(id, bike);
 
-        this.setState({
-            bikes: this.state.bikes.filter(el => el._id !== id),
-            rentedTime: 1
-        });
+    }
+
+    getBikes() {
+        return this.props.bikes.filter(el => el.rent === false);
     }
 
 
     bikesList = () => {
-        return this.state.bikes.map(currentbike => {
+        return this.getBikes().map(currentbike => {
             return <Bikes bike={currentbike}
                           rentBike={this.rentBike}
                           deleteBike={this.deleteBike}
@@ -110,7 +114,7 @@ export default class AvailRentalBike extends Component {
         return(
             <div className="container">
                 <h4 className="head">🚲 Available Rent Bike</h4>
-                <h6 className="head"> All available bikes are: {this.state.bikes.length}</h6>
+                <h6 className="head"> All available bikes are: {this.getBikes().length}</h6>
                 {this.bikesList()}
             </div>
         )

@@ -44,6 +44,19 @@ class App extends Component {
     rentBike = async (id, bike) => {
         const result = await axios.patch('/rentBike/' +id , bike);
         console.log(result.data);
+
+        this.setState({
+            bikes: this.state.bikes.filter(el => el._id !== id)
+        });
+    }
+
+    cancelRent = async (id) => {
+        const result = await axios.patch('/rentBike/'+ id, {rent: false});
+        console.log(result.data);
+
+        this.setState({
+            bikes: this.state.bikes.filter(el => el._id !== id)
+        });
     }
 
 
@@ -74,10 +87,11 @@ class App extends Component {
                         </div>
                     </div>
                 </div>
-                <RentalBike bikes={this.state.bikes} ></RentalBike>
+                <RentalBike bikes={this.state.bikes} cancelRent={this.cancelRent}></RentalBike>
                 <AvailRentalBike bikes={this.state.bikes} rentBike={this.rentBike} deleteBike={this.deleteBike}></AvailRentalBike>
             </div>
         );
     }
 }
 export default App;
+

@@ -42,7 +42,8 @@ export default class CreateBike extends Component {
         const bike = {
             name: this.state.name,
             bikeType: this.state.bikeType,
-            price: this.state.price
+            price: this.state.price,
+            rentedTime: 1,
         }
         this.props.addBike(bike);
 

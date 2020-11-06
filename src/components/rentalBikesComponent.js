@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import axios from "axios";
 
 const Bikes = props => (
     <div className="container container-rent-avail">
@@ -33,46 +32,42 @@ export default class RentalBike extends Component {
     }
 
     componentDidMount = async () => {
-        try {
-            const res = await axios.get('/rentBike/');
+        setTimeout(()=>{
             this.setState({
-                bikes: res.data.data.bikes.filter(el => el.rent === true)
+                bikes: this.props.bikes.filter(el => el.rent === true)
             });
-            this.totalPrice();
+        }, 500);
 
-        } catch (err) {
-            console.log(`Error: ${err}`);
-        }
     }
 
-    totalPrice = () => {
-        const arrPrice = this.state.bikes.map(el=> el.price * el.rentedTime );
-        console.log(arrPrice);
+    totalPrice() {
+        const arr = this.props.bikes.filter(el => el.rent === true);
+        console.log(arr);
+        if (arr.length > 0) {
+            const arrPrice = arr.map(el=> el.price * el.rentedTime );
 
-        const totalPrice = (arrPrice.reduce((sum,el) => {
-            return sum + el
-        })).toFixed(2);
-        console.log(totalPrice);
+            const totalPrice = (arrPrice.reduce((sum,el) => {
+                return sum + el
+            })).toFixed(2);
 
-        this.setState({
-            totalPrice: totalPrice
-        });
+            return totalPrice;
+        }
+
     }
 
     cancelRentBike = async (id, e) => {
         e.preventDefault();
-        const bike = { rent: false}
-        const result = await axios.patch('/rentBike/'+ id, bike);
-        console.log(result.data);
+        this.props.cancelRent(id);
 
-        this.setState({
-            bikes: this.state.bikes.filter(el => el._id !== id)
-        });
+    }
+
+    getBikes() {
+        return this.props.bikes.filter(el => el.rent === true);
     }
 
 
     bikesList = () => {
-        return this.state.bikes.map(currentbike => {
+        return this.getBikes().map(currentbike => {
             return <Bikes bike={currentbike} cancelRentBike={this.cancelRentBike} key={currentbike._id}/>
         })
     }
@@ -81,8 +76,8 @@ export default class RentalBike extends Component {
     render () {
         return(
             <div className="container">
-                <h4 className="head">🤩  Your rent (Total: ${this.state.totalPrice})</h4>
-                <h6 className="head"> All rented bikes are: {this.state.bikes.length}</h6>
+                <h4 className="head">🤩  Your rent (Total: ${this.totalPrice()})</h4>
+                <h6 className="head"> All rented bikes are: {this.getBikes().length}</h6>
                 {this.bikesList()}
             </div>
 
