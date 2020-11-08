@@ -13,27 +13,23 @@ const bikeSchema = new Schema({
     },
     price: {
         type: Number,
-        default: 12.99
+        default: 1299
     },
     rent: {
         type: Boolean,
         default: false
     },
-    rentedAt: Date,
     rentedTime: {
         type: Number,
         default: 1
+    },
+    rentedPrice: {
+        type: Number,
+        default: 1299
     }
 });
 
-bikeSchema.pre('save', function (next) {
-    if (this.isModified('rent')) {
-        this.rentedAt = Date.now() - 1000;
-        next();
-    } else {
-        return next();
-    }
-});
+/// Price saved in cents. For example : 12.99 $ is 1299 cents.
 
 const Bike = mongoose.model('Bike', bikeSchema);
 

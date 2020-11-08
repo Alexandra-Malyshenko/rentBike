@@ -7,7 +7,7 @@ const Bikes = props => (
             <label>/</label>
             <label>{props.bike.bikeType}</label>
             <label>/</label>
-            <label>$ {props.bike.price}</label>
+            <label>$ {(props.bike.price / 100).toFixed(2)}</label>
             <label>/</label>
             <input type="number" name={props.bike._id} min="1" max="100" required
                    placeholder="1" defaultValue={1}
@@ -52,7 +52,7 @@ export default class AvailRentalBike extends Component {
     }
 
     rentBike = async (id, e) => {
-        e.preventDefault();
+        // Make sure that time what came on bike with write id if not put value 1
         let time = this.state.id === id ? this.state.time : 1;
         this.props.rentBike(id, time);
     }
@@ -70,11 +70,7 @@ export default class AvailRentalBike extends Component {
 
     render () {
         return(
-            <div className="container">
-                <h4 className="head">🚲 Available Rent Bike</h4>
-                <h6 className="head"> All available bikes are: {this.props.availableRentBikes.length}</h6>
-                {this.bikesList()}
-            </div>
+            this.bikesList()
         )
     }
 

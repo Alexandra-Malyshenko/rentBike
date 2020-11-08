@@ -24,12 +24,15 @@ exports.createBike = async (req, res) => {
     try {
         const bikeName = req.body.name;
         const bikeType = req.body.bikeType;
-        const bikePrice = req.body.price;
+        const bikePrice = (req.body.price * 100).toFixed(2);
+
 
         const new_bike = await Bike.create({
             name: bikeName,
             bikeType: bikeType,
-            price: bikePrice
+            price: bikePrice,
+            rentedTime: 1,
+            rentedPrice: bikePrice
         });
 
         await res.status(201).json({
@@ -83,10 +86,24 @@ exports.deleteBike = async (req, res) => {
 
 exports.updateRentBike = async (req, res) => {
     try {
+        // 1. From request find out if user want to rent (true) or want to cancel rent (false)
         const rent = req.body.rent;
-        const rentedAt = rent ? Date.now(): undefined;
+        // 2. if rent true we want to set a time for rent
         const rentedTime = rent ? req.body.rentedTime: 1;
-        const bike = await Bike.findByIdAndUpdate(req.params.id, {rent, rentedAt, rentedTime}, {
+
+        // 3. Find out what price have bike (by ID ) what we want ro rent
+
+        const bikeBY = await Bike.findById(req.params.id);
+        let rentedPrice = rent ? bikeBY.price * rentedTime  : 0;
+
+        if (rentedTime > 20) {
+            rentedPrice = (rentedPrice / 2).toFixed(2);
+        } else {
+            rentedPrice = rentedPrice.toFixed(2);
+        }
+
+        // 4. Update data
+        const bike = await Bike.findByIdAndUpdate(req.params.id, {rent, rentedTime, rentedPrice}, {
             new: true,
             runValidators: true
         });

@@ -1,47 +1,62 @@
 import './App.css';
 import React, { Component } from 'react';
+import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CreateBike from './components/createBikeComponent';
 import RentalBike from './components/rentalBikesComponent';
 import AvailRentalBike from './components/availableBikesComponent';
-import axios from "axios";
 
 
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {bikes: [],
+        this.state = {
+            bikes: [],
             rentalBikes: [],
-            availableRentBikes: []};
+            availableRentBikes: []
+        };
 
         this.addBike = this.addBike.bind(this);
         this.deleteBike = this.deleteBike.bind(this);
         this.rentBike = this.rentBike.bind(this);
+        this.cancelRent = this.cancelRent.bind(this);
 
     }
 
     componentDidMount = async () => {
-        const res = await axios.get('/rentBike/');
+        const result = await axios.get('/rentBike/');
         this.setState({
-            bikes: res.data.data.bikes,
-            availableRentBikes: res.data.data.bikes.filter(el => el.rent === false),
-            rentalBikes: res.data.data.bikes.filter(el => el.rent === true),
+            bikes: result.data.data.bikes,
+            availableRentBikes: result.data.data.bikes.filter(el => el.rent === false),
+            rentalBikes: result.data.data.bikes.filter(el => el.rent === true),
         })
     }
 
+    // Method for Total price in RentalBikes List
+    totalPrice = () => {
+        const arr = this.state.rentalBikes;
+        if (arr.length > 0) {
+            const arrPrice = arr.map(el=> el.rentedPrice / 100 );
+
+            const totalPrice = (arrPrice.reduce((sum,el) => {
+                return sum + el
+            })).toFixed(2);
+
+            return totalPrice;
+        }
+    }
 
     addBike = async (bike) => {
-
         const result = await axios.post('/rentBike/add', bike);
+        console.log(result);
+
         this.setState({
             availableRentBikes: this.state.availableRentBikes.concat([result.data.data.bike]),
         });
-        console.log(this.state.bikes);
     }
 
     deleteBike = async (id) => {
-        const res = await axios.delete('/rentBike/'+ id);
-        console.log(res.data);
+        await axios.delete('/rentBike/'+ id);
 
         this.setState({
             availableRentBikes: this.state.availableRentBikes.filter(el => el._id !== id),
@@ -49,20 +64,12 @@ class App extends Component {
     }
 
     rentBike = async (id, time) => {
-        let newBikePrice = 0;
-        const res = await axios.get('/rentBike/'+ id);
-        if (time >= 20) {
-            newBikePrice = ((res.data.bike.price * time) / 2).toFixed(2);
-        } else {
-            newBikePrice = (res.data.bike.price * time).toFixed(2);
-        }
         const bike = {
             rent: true,
-            price: newBikePrice,
             rentedTime: time
         }
+
         const result = await axios.patch('/rentBike/'+id , bike);
-        console.log(result.data);
 
         this.setState({
             availableRentBikes: this.state.availableRentBikes.filter(el => el._id !== id),
@@ -71,8 +78,8 @@ class App extends Component {
     }
 
     cancelRent = async (id) => {
+
         const result = await axios.patch('/rentBike/'+ id, {rent: false});
-        console.log(result.data);
 
         this.setState({
             availableRentBikes: this.state.availableRentBikes.concat([result.data.bike]),
@@ -87,7 +94,6 @@ class App extends Component {
                 <div className="App-header">
                     <h2>Awesome Bike Rental</h2>
                 </div>
-
                 <div className="container">
                     <h4 className="head">🤑  Create Bike</h4>
                     <div className="container container-inner">
@@ -96,8 +102,17 @@ class App extends Component {
                         </div>
                     </div>
                 </div>
-                <RentalBike rentalBikes={this.state.rentalBikes} cancelRent={this.cancelRent}></RentalBike>
-                <AvailRentalBike availableRentBikes={this.state.availableRentBikes} rentBike={this.rentBike} deleteBike={this.deleteBike}></AvailRentalBike>
+                <div className="container">
+                    <h4 className="head">🤩  Your rent (Total: ${this.totalPrice()})</h4>
+                    <h6 className="head"> All rented bikes are: {this.state.rentalBikes.length}</h6>
+                    <RentalBike rentalBikes={this.state.rentalBikes} cancelRent={this.cancelRent}></RentalBike>
+                </div>
+
+                <div className="container">
+                    <h4 className="head">🚲 Available Rent Bike</h4>
+                    <h6 className="head"> All available bikes are: {this.state.availableRentBikes.length}</h6>
+                    <AvailRentalBike availableRentBikes={this.state.availableRentBikes} rentBike={this.rentBike} deleteBike={this.deleteBike}></AvailRentalBike>
+                </div>
             </div>
         );
     }
